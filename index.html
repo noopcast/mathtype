@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mathtype — mental math trainer</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="logo">math<span>type</span></div>
+    <div class="score-panel" id="scorePanel">
+      <div class="score-panel-title"><span id="scorePanelGame">calcul mental</span><span id="scorePanelMeta"></span></div>
+      <div class="score-row">
+        <div class="score-row-label">best</div>
+        <div class="score-chips" id="bestChips"></div>
+      </div>
+      <div class="score-row">
+        <div class="score-row-label">last</div>
+        <div class="score-chips" id="lastChip"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="game-tabs" id="gameTabs">
+    <button class="game-tab active" data-game="calcul">calcul mental</button>
+    <button class="game-tab" data-game="algebra">algèbre</button>
+    <button class="game-tab" data-game="matrices">matrices</button>
+  </div>
+
+  <div class="mode-bar" id="modeBar">
+    <span id="calculModes">
+      <button class="mode-btn active" data-mode="addition">+ addition</button>
+      <button class="mode-btn" data-mode="subtraction">− soustraction</button>
+      <button class="mode-btn" data-mode="multiplication">× multiplication</button>
+      <button class="mode-btn" data-mode="mixed">mixed</button>
+      <div class="sep"></div>
+    </span>
+    <span id="algebraModes" style="display:none">
+      <button class="mode-btn active" data-alg="linear">linéaire</button>
+      <button class="mode-btn" data-alg="twostep">2 étapes</button>
+      <button class="mode-btn" data-alg="bothsides">x des 2 côtés</button>
+      <div class="sep"></div>
+    </span>
+    <span id="matrixModes" style="display:none">
+      <button class="mode-btn active" data-mat="det2">det 2×2</button>
+      <button class="mode-btn" data-mat="det3">det 3×3</button>
+      <button class="mode-btn" data-mat="trace">trace</button>
+      <button class="mode-btn" data-mat="mult">A×B élément</button>
+      <div class="sep"></div>
+    </span>
+    <button class="mode-btn" data-time="30">30s</button>
+    <button class="mode-btn active" data-time="60">60s</button>
+    <button class="mode-btn" data-time="120">120s</button>
+    <div class="sep"></div>
+    <button class="mode-btn active" data-diff="easy">easy</button>
+    <button class="mode-btn" data-diff="medium">medium</button>
+    <button class="mode-btn" data-diff="hard">hard</button>
+  </div>
+
+  <div id="startScreen" class="start-screen">
+    <div class="start-msg" id="startMsg">calcul mental rapide<br>tape ta réponse + <span class="kbd">entrée</span></div>
+    <button class="start-btn" id="startBtn">démarrer</button>
+  </div>
+
+  <div id="gameScreen" style="display:none">
+    <div class="arena">
+      <div class="problem" id="problem"></div>
+      <div class="problem-sub" id="problemSub"></div>
+      <div class="input-row">
+        <span class="input-prefix" id="inputPrefix"></span>
+        <input type="text" id="answer" autocomplete="off" inputmode="numeric" />
+      </div>
+      <div class="streak-display" id="streakDots"></div>
+      <div class="diff-indicator" id="diffIndicator"></div>
+    </div>
+    <div class="stats-bar">
+      <div class="stat"><div class="stat-label">cpm</div><div class="stat-val accent" id="cpm">0</div></div>
+      <div class="stat"><div class="stat-label">correct</div><div class="stat-val" id="correct">0</div></div>
+      <div class="stat"><div class="stat-label">erreurs</div><div class="stat-val" id="errors">0</div></div>
+      <div class="stat"><div class="stat-label">streak</div><div class="stat-val" id="streak">0</div></div>
+    </div>
+    <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+  </div>
+
+  <div id="resultScreen" style="display:none" class="results">
+    <h2>résultats</h2>
+    <div class="results-grid">
+      <div class="stat"><div class="stat-label">cpm</div><div class="big-stat accent" id="rCpm">0</div></div>
+      <div class="stat"><div class="stat-label">précision</div><div class="big-stat" id="rAcc">0%</div></div>
+      <div class="stat"><div class="stat-label">correct</div><div class="stat-val" id="rCorrect">0</div></div>
+      <div class="stat"><div class="stat-label">meilleur streak</div><div class="stat-val" id="rStreak">0</div></div>
+    </div>
+    <button class="start-btn" id="retryBtn">recommencer</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
