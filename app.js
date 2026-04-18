@@ -1,5 +1,14 @@
 /* ── CONSTANTS ── */
 const STORAGE_KEY='mathtype.scores.v1';
+const THEME_KEY='mathtype.theme.v1';
+const THEMES=[
+  {name:'green', hex:'#5DCAA5'},
+  {name:'blue',  hex:'#5DA8E0'},
+  {name:'purple',hex:'#B574E2'},
+  {name:'pink',  hex:'#E07BA5'},
+  {name:'orange',hex:'#E09A5D'},
+  {name:'yellow',hex:'#D4C15D'}
+];
 const STREAK_CAP=20;
 const TICK_MS=100;
 const BOOST_DIVISOR=5;
@@ -36,9 +45,38 @@ const E=Object.fromEntries(
    'cpm','correct','errors','streak',
    'rCpm','rAcc','rCorrect','rStreak',
    'gameTabs','modeBar','calculModes','algebraModes','matrixModes',
-   'scorePanelGame','scorePanelMeta','bestChips','lastChip']
+   'scorePanelGame','scorePanelMeta','bestChips','lastChip',
+   'themePicker']
     .map(id=>[id,document.getElementById(id)])
 );
+
+/* ── THEME ── */
+function hexToRgb(hex){
+  const h=hex.replace('#','');
+  return {r:parseInt(h.slice(0,2),16),g:parseInt(h.slice(2,4),16),b:parseInt(h.slice(4,6),16)};
+}
+function applyTheme(hex){
+  const {r,g,b}=hexToRgb(hex);
+  const root=document.documentElement.style;
+  root.setProperty('--accent',hex);
+  root.setProperty('--accent-dim',`rgba(${r},${g},${b},0.12)`);
+  for(const s of E.themePicker.children) s.classList.toggle('active',s.dataset.hex===hex);
+}
+function initThemePicker(){
+  for(const t of THEMES){
+    const s=document.createElement('button');
+    s.className='swatch';s.style.background=t.hex;s.dataset.hex=t.hex;s.title=t.name;
+    s.addEventListener('click',()=>{
+      applyTheme(t.hex);
+      try{localStorage.setItem(THEME_KEY,t.hex);}catch(e){}
+    });
+    E.themePicker.appendChild(s);
+  }
+  let saved;
+  try{saved=localStorage.getItem(THEME_KEY);}catch(e){}
+  applyTheme(saved||THEMES[0].hex);
+}
+initThemePicker();
 
 /* ── HELPERS ── */
 function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a}
