@@ -24,6 +24,11 @@ const START_MSGS={
   matrices:'opérations matricielles<br>tape ta réponse + <span class="kbd">entrée</span>'
 };
 const MODE_PANELS={calcul:'calculModes',algebra:'algebraModes',matrices:'matrixModes'};
+const MODE_LABELS={
+  calcul:{addition:'addition',subtraction:'soustraction',multiplication:'multiplication',mixed:'mixed'},
+  algebra:{linear:'linéaire',twostep:'2 étapes',bothsides:'x 2 côtés'},
+  matrices:{det2:'det 2×2',det3:'det 3×3',trace:'trace',mult:'A×B'}
+};
 
 /* ── STATE ── */
 const S={
@@ -40,7 +45,7 @@ const S={
 /* ── DOM CACHE ── */
 const E=Object.fromEntries(
   ['answer','problem','problemSub','inputPrefix','timerFill',
-   'startScreen','gameScreen','resultScreen','startMsg','startBtn','retryBtn',
+   'startScreen','gameScreen','resultScreen','startMsg','startBtn','retryBtn','submitBtn',
    'streakDots','diffIndicator',
    'cpm','correct','errors','streak',
    'rCpm','rAcc','rCorrect','rStreak',
@@ -102,7 +107,10 @@ function loadScores(){
 function saveScores(){
   try{localStorage.setItem(STORAGE_KEY,JSON.stringify(scoreCache));}catch(e){}
 }
-function scoreKey(){return `${S.game}.${S.time}s`}
+function currentMode(){
+  return S.game==='calcul'?S.mode:S.game==='algebra'?S.algMode:S.matMode;
+}
+function scoreKey(){return `${S.game}.${currentMode()}.${S.time}s`}
 function recordScore(cpm,acc){
   const data=loadScores();
   const entry=data[scoreKey()]||{best:[],last:null};
@@ -134,7 +142,7 @@ function makeChip(score,extraClass){
 function renderScorePanel(highlightLast){
   const entry=loadScores()[scoreKey()]||{best:[],last:null};
   E.scorePanelGame.textContent=GAME_LABELS[S.game];
-  E.scorePanelMeta.textContent=`${S.time}s`;
+  E.scorePanelMeta.textContent=`${MODE_LABELS[S.game][currentMode()]} · ${S.time}s`;
   E.bestChips.replaceChildren(...Array.from({length:TOP_SCORES},(_,i)=>makeChip(entry.best[i],'best')));
   E.lastChip.replaceChildren(makeChip(entry.last,highlightLast?'last-new':''));
 }
@@ -406,9 +414,9 @@ function switchGame(game){
 
 /* ── MODE BAR: data-attribute → state setter registry ── */
 const MODE_ATTRS=[
-  {attr:'mode',sel:'[data-mode]',apply:v=>S.mode=v},
-  {attr:'alg', sel:'[data-alg]', apply:v=>S.algMode=v},
-  {attr:'mat', sel:'[data-mat]', apply:v=>S.matMode=v},
+  {attr:'mode',sel:'[data-mode]',apply:v=>{S.mode=v;renderScorePanel(false);}},
+  {attr:'alg', sel:'[data-alg]', apply:v=>{S.algMode=v;renderScorePanel(false);}},
+  {attr:'mat', sel:'[data-mat]', apply:v=>{S.matMode=v;renderScorePanel(false);}},
   {attr:'time',sel:'[data-time]',apply:v=>{S.time=parseInt(v);renderScorePanel(false);}},
   {attr:'diff',sel:'[data-diff]',apply:v=>S.diff=v}
 ];
@@ -416,6 +424,11 @@ const MODE_ATTRS=[
 /* ── EVENT LISTENERS ── */
 E.answer.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&S.running) checkAnswer();
+});
+
+E.submitBtn.addEventListener('mousedown',e=>e.preventDefault());
+E.submitBtn.addEventListener('click',()=>{
+  if(S.running){checkAnswer();E.answer.focus();}
 });
 
 E.startBtn.addEventListener('click',startGame);

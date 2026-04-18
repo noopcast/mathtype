@@ -53,11 +53,14 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 .problem{font-size:48px;font-weight:500;letter-spacing:2px;margin-bottom:1.5rem;min-height:60px;transition:opacity 0.1s}
 .problem.matrix-mode{font-size:24px;letter-spacing:0;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
 .problem-sub{font-size:14px;color:var(--text-hint);margin-top:-12px;margin-bottom:16px;min-height:20px}
-.input-row{display:flex;justify-content:center;align-items:center;gap:12px}
+.input-row{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap}
 .input-prefix{font-size:28px;font-weight:500;color:var(--text-hint)}
 #answer{width:160px;text-align:center;font-size:28px;font-family:var(--font);font-weight:500;background:transparent;border:none;border-bottom:2px solid var(--border-hover);color:var(--text);padding:8px 4px;outline:none;transition:border-color 0.15s;border-radius:0}
 #answer:focus{border-bottom-color:var(--accent)}
 #answer.wrong{border-bottom-color:var(--wrong);animation:shake 0.3s}
+.submit-btn{background:var(--accent);color:#0e0e10;border:none;border-radius:var(--radius);width:48px;height:48px;font-size:22px;cursor:pointer;font-family:var(--font);font-weight:600;display:flex;align-items:center;justify-content:center;transition:opacity 0.15s,transform 0.08s;flex-shrink:0}
+.submit-btn:hover{opacity:0.85}
+.submit-btn:active{transform:scale(0.94)}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:2rem}
 .stat{background:var(--surface);border-radius:var(--radius);padding:12px}
@@ -93,4 +96,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   .problem.matrix-mode{flex-direction:column;gap:10px}
   .mcell{width:36px;font-size:18px}
   .m3x3 .mcell{width:32px;font-size:16px}
+  .app{padding:1.2rem 1rem}
+  .problem{font-size:38px}
+  .stats-bar{grid-template-columns:repeat(4,1fr);gap:6px}
+  .stat{padding:8px 6px}
+  .stat-val{font-size:16px}
+  .stat-label{font-size:9px}
+  #answer{width:130px;font-size:26px}
+  .submit-btn{width:52px;height:52px;font-size:24px}
+  .arena{padding:1.2rem 0}
 }
