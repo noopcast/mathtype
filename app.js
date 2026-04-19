@@ -111,10 +111,10 @@ function currentMode(){
   return S.game==='calcul'?S.mode:S.game==='algebra'?S.algMode:S.matMode;
 }
 function scoreKey(){return `${S.game}.${currentMode()}.${S.time}s`}
-function recordScore(cpm,acc){
+function recordScore(cpm,acc,correct){
   const data=loadScores();
   const entry=data[scoreKey()]||{best:[],last:null};
-  const score={cpm,acc,ts:Date.now(),diff:S.diff};
+  const score={cpm,acc,correct,ts:Date.now(),diff:S.diff};
   entry.last=score;
   entry.best.push(score);
   entry.best.sort((a,b)=>b.cpm-a.cpm);
@@ -129,10 +129,16 @@ function makeChip(score,extraClass){
     chip.className='score-chip'+(extraClass?' '+extraClass:'');
     const cpm=document.createElement('span');
     cpm.className='chip-cpm';cpm.textContent=score.cpm;
+    chip.append(cpm);
+    if(score.correct!=null){
+      const corr=document.createElement('span');
+      corr.className='chip-correct';corr.textContent=score.correct+'✓';
+      chip.append(corr);
+    }
     const diff=document.createElement('span');
     diff.className='chip-diff '+score.diff;diff.textContent=score.diff;
-    chip.append(cpm,diff);
-    chip.title=`${score.cpm} cpm · ${score.acc}% · ${score.diff}`;
+    chip.append(diff);
+    chip.title=`${score.cpm} cpm · ${score.correct!=null?score.correct+' corrects · ':''}${score.acc}% · ${score.diff}`;
   }else{
     chip.className='score-chip empty';
     chip.textContent='—';
@@ -373,7 +379,7 @@ function endGame(){
   E.rAcc.textContent=acc+'%';
   E.rCorrect.textContent=S.correctCount;
   E.rStreak.textContent=S.bestStreak;
-  if(total>0) recordScore(cpm,acc);
+  if(total>0) recordScore(cpm,acc,S.correctCount);
 }
 
 function checkAnswer(){
